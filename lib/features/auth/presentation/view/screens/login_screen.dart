@@ -1,9 +1,9 @@
 import 'package:e_commerce/core/routes/app_routes.dart';
 import 'package:e_commerce/core/themes/app_color.dart';
 import 'package:e_commerce/core/widgets/orange_button_widget.dart';
-import 'package:e_commerce/core/widgets/white_button_widget.dart';
-import 'package:e_commerce/features/auth/data/api/auth_api.dart';
-import 'package:e_commerce/features/auth/data/models/login_request.dart';
+import 'package:e_commerce/features/auth/data/repo/data_source/auth_data_source_imp.dart';
+import 'package:e_commerce/features/auth/data/repo/repo/auth_repo_imp.dart';
+
 import 'package:e_commerce/features/auth/presentation/view/widgets/form_field_widget.dart';
 import 'package:e_commerce/features/auth/presentation/view/widgets/password_form_field_widget.dart';
 import 'package:e_commerce/features/auth/presentation/view_model/login/login_cubit.dart';
@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    loginCubit = LoginCubit();
+    loginCubit = LoginCubit( repo: AuthRepoImp(authDataSource: AuthDataSourceImp()));
   }
 
   @override

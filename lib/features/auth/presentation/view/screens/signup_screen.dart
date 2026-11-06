@@ -2,6 +2,8 @@ import 'package:e_commerce/core/routes/app_routes.dart';
 import 'package:e_commerce/core/themes/app_color.dart';
 import 'package:e_commerce/core/widgets/orange_button_widget.dart';
 import 'package:e_commerce/features/auth/data/models/signup_request.dart';
+import 'package:e_commerce/features/auth/data/repo/data_source/auth_data_source_imp.dart';
+import 'package:e_commerce/features/auth/data/repo/repo/auth_repo_imp.dart';
 import 'package:e_commerce/features/auth/presentation/view/widgets/form_field_widget.dart';
 import 'package:e_commerce/features/auth/presentation/view/widgets/password_form_field_widget.dart';
 import 'package:e_commerce/features/auth/presentation/view_model/register/sign_up_cubit.dart';
@@ -32,7 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
-    signUpCubit = SignUpCubit();
+    signUpCubit = SignUpCubit( repo: AuthRepoImp(authDataSource: AuthDataSourceImp()));
   }
 
   @override
