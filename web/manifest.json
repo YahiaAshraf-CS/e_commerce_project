@@ -1,6 +1,6 @@
 {
-    "name": "e_commerce_project",
-    "short_name": "e_commerce_project",
+    "name": "e_commerce",
+    "short_name": "e_commerce",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
