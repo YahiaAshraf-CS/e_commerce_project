@@ -1,35 +1,35 @@
-class CategoriesList {
-  List<CategoryModel>? list;
+class CategoriesListDto {
+  List<CategoryModelDto>? list;
 
-  CategoriesList({this.list});
+  CategoriesListDto({this.list});
 
-  factory CategoriesList.fromJson(dynamic json) {
+  factory CategoriesListDto.fromJson(dynamic json) {
     if (json is List) {
-      return CategoriesList(
-        list: json.map((v) => CategoryModel.fromJson(v)).toList(),
+      return CategoriesListDto(
+        list: json.map((v) => CategoryModelDto.fromJson(v)).toList(),
       );
     } else if (json is Map<String, dynamic>) {
       var data = json['list'] ?? json['data'] ?? json;
       if (data is List) {
-        return CategoriesList(
-          list: data.map((v) => CategoryModel.fromJson(v)).toList(),
+        return CategoriesListDto(
+          list: data.map((v) => CategoryModelDto.fromJson(v)).toList(),
         );
       }
     }
-    return CategoriesList(list: []);
+    return CategoriesListDto(list: []);
   }
 }
 
-class CategoryModel {
+class CategoryModelDto {
   String? slug;
   String? name;
 
-  CategoryModel({this.slug, this.name});
+  CategoryModelDto({this.slug, this.name});
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json) {
-    return CategoryModel(
-      slug: json['slug']?.toString(),
-      name: json['name']?.toString(),
+  factory CategoryModelDto.fromJson(Map<String, dynamic> json) {
+    return CategoryModelDto(
+      slug: json['slug'],
+      name: json['name'],
     );
   }
 }

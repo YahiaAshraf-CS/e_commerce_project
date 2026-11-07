@@ -13,6 +13,19 @@ final class HCError extends HomeState {
 }
 
 final class HCSuccess extends HomeState {
-  final List<CategoryModel> categoriesList;
+  final List<CategoryEntity> categoriesList;
+
   HCSuccess({required this.categoriesList});
+}
+
+final class HPLoading extends HomeState {}
+
+final class HPError extends HomeState {
+  final String messageError;
+  HPError(this.messageError);
+}
+
+final class HPSuccess extends HomeState {
+  final List<ProductEntity> productList;
+  HPSuccess({required this.productList});
 }
