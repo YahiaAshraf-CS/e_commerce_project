@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         width: double.infinity,
                                         color: const Color(0xFFF5F5F5),
                                         child: Image.network(
-                                          product.images!.first,
+                                          product.images.first,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        product.title!,
+                                        product.title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(

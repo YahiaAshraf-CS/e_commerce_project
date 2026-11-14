@@ -1,6 +1,7 @@
 import 'package:e_commerce/core/constants/app_assets.dart';
 import 'package:e_commerce/features/account/domain/entities/user_data_entity.dart';
-
+// dto => data transfer object
+// in this file we use to transfer data from api to domain layer specifically to entity
 class UserDataDto {
   MessageDto? message;
 

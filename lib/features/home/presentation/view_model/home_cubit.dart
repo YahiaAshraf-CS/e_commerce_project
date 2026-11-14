@@ -16,6 +16,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> getAllCategories() async {
     emit(HCLoading());
     final result = await getAllCategoriesUseCase.invoke();
+    if (isClosed) return;
     switch (result) {
       case ApiSuccess<CategoriesListEntity>():
         emit(HCSuccess(categoriesList: result.data.list));
