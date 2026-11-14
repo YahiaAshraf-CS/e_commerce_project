@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/app_assets.dart';
+import 'package:e_commerce/core/di/service_locator.dart';
 import 'package:e_commerce/core/themes/app_color.dart';
 import 'package:e_commerce/core/widgets/orange_button_widget.dart';
 
@@ -30,7 +31,7 @@ class _AccountScreenState extends State<AccountScreen> {
   void initState() {
     super.initState();
     
-    accountCubit = injectableAccountCubit()..getUserData();
+    accountCubit = getIt<AccountCubit>()..getUserData();
   }
 
   @override

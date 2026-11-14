@@ -6,6 +6,9 @@ import "package:http/http.dart" as http;
 
 import 'dart:convert';
 
+import "package:injectable/injectable.dart";
+@injectable
+
 class AccountApi {
    Future<ApiResult<UserDataDto>> getUserData() async {
     var url = Uri.parse("${ApiConstant.baseUrl + ApiConstant.userProfile}");
@@ -78,6 +81,4 @@ class AccountApi {
 
 }
 
-AccountApi injectableAccountApi(){
-  return AccountApi();
-}
+

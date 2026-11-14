@@ -3,7 +3,8 @@ import 'package:e_commerce/features/account/data/api/account_api.dart';
 import 'package:e_commerce/features/account/data/models/user_data_dto.dart';
 import 'package:e_commerce/features/account/domain/entities/user_data_entity.dart';
 import 'package:e_commerce/features/account/domain/repo/account_data_source_interface.dart';
-
+import 'package:injectable/injectable.dart';
+@Injectable(as:AccountDataSourceInterface)
 class AccountDataSourceImp implements AccountDataSourceInterface {
   final AccountApi _api;
 
@@ -37,5 +38,3 @@ class AccountDataSourceImp implements AccountDataSourceInterface {
   }
 }
 
-
-AccountDataSourceInterface injectAccountDataSource() => AccountDataSourceImp(injectableAccountApi());
