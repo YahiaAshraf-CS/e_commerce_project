@@ -3,4 +3,11 @@ import 'package:e_commerce/features/account/domain/entities/user_data_entity.dar
 
 abstract class AccountDataSourceInterface {
   Future<ApiResult<UserDataEntity>> getUserData();
+  Future<ApiResult<String>> updateUserData({
+    required String name,
+    required String email,
+    required String phone,
+    required String image,
+    required String address,
+  });
 }

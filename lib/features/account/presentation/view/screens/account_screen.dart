@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/app_assets.dart';
 import 'package:e_commerce/core/themes/app_color.dart';
+import 'package:e_commerce/core/widgets/orange_button_widget.dart';
 import 'package:e_commerce/features/account/data/repo/account_data_source_imp.dart';
 import 'package:e_commerce/features/account/data/repo/account_repo_imp.dart';
 import 'package:e_commerce/features/account/domain/use_case/get_user_data_use_case.dart';
+import 'package:e_commerce/features/account/domain/use_case/update_user_data_use_case.dart';
 import 'package:e_commerce/features/account/presentation/view_model/account_cubit.dart';
 import 'package:e_commerce/features/auth/presentation/view/widgets/form_field_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,33 +19,81 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
- late AccountCubit accountCubit;
+  late AccountCubit accountCubit;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
+
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
     final repo = AccountRepoImp(AccountDataSourceImp());
-    accountCubit = AccountCubit(GetUserDataUseCase(repo))..getUserData();
+    accountCubit = AccountCubit(
+      GetUserDataUseCase(repo),
+      UpdateUserDataUseCase(repo),
+    )..getUserData();
   }
 
-  
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    imageController.dispose();
+    super.dispose();
+  }
+
+  void _initializeControllers(userData) {
+    if (!_isInitialized) {
+      nameController.text = userData.message.name;
+      phoneController.text = userData.message.phone;
+      emailController.text = userData.message.email;
+      addressController.text = userData.message.address;
+      imageController.text = userData.message.image;
+      _isInitialized = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEBEBEB),
-      body: BlocBuilder<AccountCubit, AccountState>(
+      body: BlocConsumer<AccountCubit, AccountState>(
         bloc: accountCubit,
+        listener: (context, state) {
+          if (state is UpdateUserDataSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.messageSuccess)),
+            );
+            accountCubit.getUserData();
+          } else if (state is UpdateUserDataError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.messageError)),
+            );
+          }
+        },
         builder: (context, state) {
-
           if (state is AccountLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          if(state is AccountError){
-            return Center(child: Text(state.messageError,style: const TextStyle(color: AppColors.orangeDark),));
+          if (state is AccountError) {
+            return Center(
+              child: Text(
+                state.messageError,
+                style: const TextStyle(color: AppColors.orangeDark),
+              ),
+            );
           }
-          if (state is AccountSuccess){
-             return SafeArea(
+          if (state is AccountSuccess) {
+            _initializeControllers(state.userDataEntity);
+
+            return SafeArea(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -57,7 +107,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(60),
-                            child: state.userDataEntity.message.image.isEmpty
+                            child: imageController.text.isEmpty
                                 ? Image.asset(
                                     AppAssets.picture,
                                     height: 120,
@@ -68,8 +118,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                     height: 120,
                                     width: 120,
                                     fit: BoxFit.cover,
-                                    imageUrl:
-                                        state.userDataEntity.message.image,
+                                    imageUrl: imageController.text,
                                     placeholder: (context, url) => const Center(
                                       child: CircularProgressIndicator(),
                                     ),
@@ -81,7 +130,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                           fit: BoxFit.cover,
                                         ),
                                   ),
-                          ), Positioned(
+                          ),
+                          Positioned(
                             bottom: 0,
                             right: 0,
                             child: Container(
@@ -107,42 +157,50 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                     const SizedBox(height: 32),
                     FormFieldWidget(
-                      controller:TextEditingController(text: state.userDataEntity.message.name),
+                      controller: nameController,
                       labelText: 'Name',
                       HintText: 'Name',
                     ),
                     const SizedBox(height: 16),
                     FormFieldWidget(
-                      controller: TextEditingController(
-                        text: state.userDataEntity.message.phone,
-                      ),
+                      controller: phoneController,
                       labelText: 'Phone',
                       HintText: 'Phone',
                     ),
                     const SizedBox(height: 16),
                     FormFieldWidget(
-                      controller: TextEditingController(
-                        text: state.userDataEntity.message.email,
-                      ),
+                      controller: emailController,
                       labelText: 'Email',
                       HintText: 'Email',
                     ),
                     const SizedBox(height: 16),
                     FormFieldWidget(
-                      controller: TextEditingController(
-                        text: state.userDataEntity.message.address,
-                      ),
+                      controller: addressController,
                       labelText: 'Address',
                       HintText: 'Address',
                     ),
+                    const SizedBox(height: 32),
+                    state is UpdateUserDataLoading
+                        ? const CircularProgressIndicator()
+                        : OrangeButtonWidget(
+                            text: 'submit',
+                            onPressed: () async {
+                              await accountCubit.updateUserData(
+                                name: nameController.text,
+                                phone: phoneController.text,
+                                email: emailController.text,
+                                address: addressController.text,
+                                image: imageController.text,
+                              );
+                            },
+                          ),
                   ],
                 ),
               ),
             );
-       
           }
-          return SizedBox(height: 10,);
-           },
+          return const SizedBox();
+        },
       ),
     );
   }
