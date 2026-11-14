@@ -1,3 +1,4 @@
+import 'package:e_commerce/core/di/service_locator.dart';
 import 'package:e_commerce/features/home/domin/entities/categories_list_entity.dart';
 import 'package:e_commerce/features/home/data/repo/home_data_source_imp.dart';
 import 'package:e_commerce/features/home/data/repo/home_repo_imp.dart';
@@ -22,8 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    final repo = HomeRepoImp(HomeDataSourceImp());
-    homeCubit = HomeCubit(GetAllCategoriesUseCase(repo), GetAllProductsUserCase(repo))
+  
+    homeCubit = getIt<HomeCubit>()
       ..getAllCategories()
       ..getAllProducts();
   }
