@@ -5,9 +5,12 @@ import 'package:e_commerce/features/account/domain/entities/user_data_entity.dar
 import 'package:e_commerce/features/account/domain/repo/account_data_source_interface.dart';
 
 class AccountDataSourceImp implements AccountDataSourceInterface {
+  final AccountApi _api;
+
+  AccountDataSourceImp(this._api);
   @override
   Future<ApiResult<UserDataEntity>> getUserData() async {
-    final resDto = await AccountApi.getUserData();
+    final resDto = await _api.getUserData();
     switch (resDto) {
       case ApiSuccess<UserDataDto>():
         return ApiSuccess(resDto.data.toEntity());
@@ -24,7 +27,7 @@ class AccountDataSourceImp implements AccountDataSourceInterface {
     required String address,
     required String phone,
   }) async {
-    return await AccountApi.updateDataUser(
+    return await _api.updateDataUser(
       name: name,
       email: email,
       phone: phone,
@@ -33,3 +36,6 @@ class AccountDataSourceImp implements AccountDataSourceInterface {
     );
   }
 }
+
+
+AccountDataSourceInterface injectAccountDataSource() => AccountDataSourceImp(injectableAccountApi());

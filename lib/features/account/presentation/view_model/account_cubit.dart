@@ -9,7 +9,8 @@ import 'package:meta/meta.dart';
 part 'account_state.dart';
 
 class AccountCubit extends Cubit<AccountState> {
-  AccountCubit(this.getUserDataUseCase, this.updateUserDataUseCase) : super(AccountInitial());
+  AccountCubit(this.getUserDataUseCase, this.updateUserDataUseCase)
+    : super(AccountInitial());
   final GetUserDataUseCase getUserDataUseCase;
   final UpdateUserDataUseCase updateUserDataUseCase;
   // we use it to get user data
@@ -24,7 +25,7 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
-  Future< void> updateUserData({
+  Future<void> updateUserData({
     required String name,
     required String email,
     required String image,
@@ -41,11 +42,14 @@ class AccountCubit extends Cubit<AccountState> {
     );
     switch (result) {
       case ApiSuccess<String>():
-      emit( UpdateUserDataSuccess(
-         result.data
-      ));
+        emit(UpdateUserDataSuccess(result.data));
       case ApiError<String>():
         emit(UpdateUserDataError(result.message));
     }
   }
 }
+
+AccountCubit injectableAccountCubit() => AccountCubit(
+  injectableGetUserDataUseCase(),
+  injectableUpdateUserDataUseCase(),
+);

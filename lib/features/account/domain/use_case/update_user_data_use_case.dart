@@ -1,4 +1,5 @@
 import 'package:e_commerce/core/network/api_result.dart';
+import 'package:e_commerce/features/account/data/repo/account_repo_imp.dart';
 import 'package:e_commerce/features/account/domain/repo/account_repo_interface.dart';
 
 class UpdateUserDataUseCase {
@@ -22,3 +23,5 @@ class UpdateUserDataUseCase {
         phone: phone,
   );
 }
+
+UpdateUserDataUseCase injectableUpdateUserDataUseCase() => UpdateUserDataUseCase(injectableAccountRepo());

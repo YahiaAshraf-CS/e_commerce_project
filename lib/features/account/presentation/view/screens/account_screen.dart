@@ -2,10 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/core/constants/app_assets.dart';
 import 'package:e_commerce/core/themes/app_color.dart';
 import 'package:e_commerce/core/widgets/orange_button_widget.dart';
-import 'package:e_commerce/features/account/data/repo/account_data_source_imp.dart';
-import 'package:e_commerce/features/account/data/repo/account_repo_imp.dart';
-import 'package:e_commerce/features/account/domain/use_case/get_user_data_use_case.dart';
-import 'package:e_commerce/features/account/domain/use_case/update_user_data_use_case.dart';
+
 import 'package:e_commerce/features/account/presentation/view_model/account_cubit.dart';
 import 'package:e_commerce/features/auth/presentation/view/widgets/form_field_widget.dart';
 import 'package:flutter/material.dart';
@@ -32,11 +29,8 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
-    final repo = AccountRepoImp(AccountDataSourceImp());
-    accountCubit = AccountCubit(
-      GetUserDataUseCase(repo),
-      UpdateUserDataUseCase(repo),
-    )..getUserData();
+    
+    accountCubit = injectableAccountCubit()..getUserData();
   }
 
   @override
