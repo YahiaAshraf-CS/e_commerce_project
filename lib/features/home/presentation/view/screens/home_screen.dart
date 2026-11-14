@@ -1,3 +1,4 @@
+import 'package:e_commerce/core/di/service_locator.dart';
 import 'package:e_commerce/features/home/domin/entities/categories_list_entity.dart';
 import 'package:e_commerce/features/home/data/repo/home_data_source_imp.dart';
 import 'package:e_commerce/features/home/data/repo/home_repo_imp.dart';
@@ -8,6 +9,7 @@ import 'package:e_commerce/features/home/presentation/view_model/home_cubit.dart
 import 'package:e_commerce/features/home/presentation/view/widgets/category_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,15 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final HomeCubit homeCubit;
-
-  @override
-  void initState() {
-    super.initState();
-    final repo = HomeRepoImp(HomeDataSourceImp());
-    homeCubit = HomeCubit(GetAllCategoriesUseCase(repo), GetAllProductsUserCase(repo))
-      ..getAllCategories()
-      ..getAllProducts();
-  }
 
   @override
   void dispose() {
@@ -66,11 +59,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 40,
                 child: BlocBuilder<HomeCubit, HomeState>(
                   buildWhen: (previous, current) =>
-                      current is HCSuccess || current is HCError,
-                  bloc: homeCubit,
+                      current is HCLoading ||
+                      current is HCSuccess ||
+                      current is HCError,
                   builder: (context, state) {
                     if (state is HCLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Skeletonizer(
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 8),
+                          itemBuilder: (context, index) =>
+                              const Bone.button(width: 80, height: 40),
+                        ),
+                      );
                     } else if (state is HCSuccess) {
                       final categories = state.categoriesList;
                       return ListView.separated(
@@ -91,21 +94,67 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-
               BlocBuilder<HomeCubit, HomeState>(
                 buildWhen: (previous, current) =>
-                    current is HPSuccess || current is HPError,
-                bloc: homeCubit,
+                    current is HPLoading ||
+                    current is HPSuccess ||
+                    current is HPError,
                 builder: (context, state) {
                   if (state is HPLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Expanded(
+                      child: Skeletonizer(
+                        child: GridView.builder(
+                          itemCount: 6,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.65,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                              ),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Bone(
+                                    height: 140,
+                                    width: double.infinity,
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(16),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: const [
+                                        Text('Product title here'),
+                                        SizedBox(height: 6),
+                                        Text('EGP 000'),
+                                        SizedBox(height: 6),
+                                        Text('4.5'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
                   } else if (state is HPSuccess) {
                     final products = state.productList;
 
                     return Expanded(
                       child: GridView.builder(
                         itemCount: products.length,
-
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
@@ -239,4 +288,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

@@ -6,8 +6,11 @@ import "package:http/http.dart" as http;
 
 import 'dart:convert';
 
+import "package:injectable/injectable.dart";
+@injectable
+
 class AccountApi {
-  static Future<ApiResult<UserDataDto>> getUserData() async {
+   Future<ApiResult<UserDataDto>> getUserData() async {
     var url = Uri.parse("${ApiConstant.baseUrl + ApiConstant.userProfile}");
     var token = await AppFlutterSecureStorage.getSecureData("Token");
     var response = await http.get(
@@ -26,7 +29,7 @@ class AccountApi {
     }
   }
 
-  static Future<ApiResult<String>> updateDataUser({
+   Future<ApiResult<String>> updateDataUser({
     required String name,
     required String email,
     required String phone,
@@ -74,4 +77,8 @@ class AccountApi {
       return ApiError(e.toString());
     }
   }
+
+
 }
+
+
