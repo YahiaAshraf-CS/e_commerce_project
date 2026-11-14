@@ -17,7 +17,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  late AccountCubit accountCubit;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -27,12 +26,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   bool _isInitialized = false;
 
-  @override
-  void initState() {
-    super.initState();
-    
-    accountCubit = getIt<AccountCubit>()..getUserData();
-  }
+
 
   @override
   void dispose() {
@@ -60,13 +54,13 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFEBEBEB),
       body: BlocConsumer<AccountCubit, AccountState>(
-        bloc: accountCubit,
+        
         listener: (context, state) {
           if (state is UpdateUserDataSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.messageSuccess)),
             );
-            accountCubit.getUserData();
+            context.read<AccountCubit>().getUserData();
           } else if (state is UpdateUserDataError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.messageError)),
@@ -180,7 +174,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         : OrangeButtonWidget(
                             text: 'submit',
                             onPressed: () async {
-                              await accountCubit.updateUserData(
+                              await context.read<AccountCubit>().updateUserData(
                                 name: nameController.text,
                                 phone: phoneController.text,
                                 email: emailController.text,

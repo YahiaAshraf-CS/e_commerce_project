@@ -2,6 +2,7 @@ import 'package:e_commerce/core/constants/app_assets.dart';
 import 'package:e_commerce/core/di/service_locator.dart';
 import 'package:e_commerce/core/themes/app_color.dart';
 import 'package:e_commerce/features/account/presentation/view/screens/account_screen.dart';
+import 'package:e_commerce/features/account/presentation/view_model/account_cubit.dart';
 import 'package:e_commerce/features/cart/presentation/view/cart_screen.dart';
 import 'package:e_commerce/features/favourite/presentation/view/favorite_screen.dart';
 import 'package:e_commerce/features/home/presentation/view/screens/home_screen.dart';
@@ -20,10 +21,15 @@ class _AppSectionState extends State<AppSection> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    BlocProvider(create: (context) => getIt<HomeCubit>()..getAllCategories()..getAllProducts(), child: HomeScreen()),
+    BlocProvider(
+      create: (context) => getIt<HomeCubit>()
+        ..getAllCategories()
+        ..getAllProducts(),
+      child: HomeScreen(),
+    ),
     CartScreen(),
     FavoriteScreen(),
-    AccountScreen(),
+    BlocProvider(create: (context) => getIt<AccountCubit>()..getUserData(), child: AccountScreen()),
   ];
 
   @override

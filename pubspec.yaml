@@ -40,6 +40,7 @@ dependencies:
   cached_network_image: ^4.0.6
   injectable: ^3.0.0
   get_it: ^9.3.0
+  skeletonizer: ^3.0.0
  
 dev_dependencies:
   flutter_test:
