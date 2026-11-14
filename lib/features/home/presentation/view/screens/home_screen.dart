@@ -20,14 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late final HomeCubit homeCubit;
 
-  @override
-  void initState() {
-    super.initState();
   
-    homeCubit = getIt<HomeCubit>()
-      ..getAllCategories()
-      ..getAllProducts();
-  }
 
   @override
   void dispose() {
@@ -68,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: BlocBuilder<HomeCubit, HomeState>(
                   buildWhen: (previous, current) =>
                       current is HCSuccess || current is HCError,
-                  bloc: homeCubit,
+                  
                   builder: (context, state) {
                     if (state is HCLoading) {
                       return const Center(child: CircularProgressIndicator());
@@ -96,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               BlocBuilder<HomeCubit, HomeState>(
                 buildWhen: (previous, current) =>
                     current is HPSuccess || current is HPError,
-                bloc: homeCubit,
+                
                 builder: (context, state) {
                   if (state is HPLoading) {
                     return const Center(child: CircularProgressIndicator());
